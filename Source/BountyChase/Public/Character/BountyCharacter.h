@@ -1,0 +1,17 @@
+// Copyright Dmytro Donets
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Character/BountyCharacterBase.h"
+#include "BountyCharacter.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class BOUNTYCHASE_API ADiceCharacter : public ABountyCharacterBase
+{
+	GENERATED_BODY()
+	
+};
