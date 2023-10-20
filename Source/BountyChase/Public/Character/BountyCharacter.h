@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class BOUNTYCHASE_API ADiceCharacter : public ABountyCharacterBase
+class BOUNTYCHASE_API ABountyCharacter : public ABountyCharacterBase
 {
 	GENERATED_BODY()
 	
