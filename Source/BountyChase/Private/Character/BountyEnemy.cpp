@@ -3,10 +3,19 @@
 
 #include "Character/BountyEnemy.h"
 
+#include "AbilitySystem/BountyAbilitySystemComponent.h"
+#include "AbilitySystem/BountyAttributeSet.h"
+
 ABountyEnemy::ABountyEnemy()
 {
 	GetMesh()->SetCustomDepthStencilValue(250);
 	Weapon->SetCustomDepthStencilValue(250);
+
+	AbilitySystemComponent = CreateDefaultSubobject<UBountyAbilitySystemComponent>("AbilitySystemComponent");
+	AbilitySystemComponent->SetIsReplicated(true);
+	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+	
+	AttributeSet = CreateDefaultSubobject<UBountyAttributeSet>("AttributeSet");
 }
 
 void ABountyEnemy::HighlightActor()
@@ -19,4 +28,11 @@ void ABountyEnemy::UnHighlightActor()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
+}
+
+void ABountyEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+
+	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 }

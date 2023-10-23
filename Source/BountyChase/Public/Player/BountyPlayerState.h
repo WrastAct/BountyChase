@@ -4,27 +4,24 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
-#include "GameFramework/Character.h"
-#include "BountyCharacterBase.generated.h"
+#include "GameFramework/PlayerState.h"
+#include "BountyPlayerState.generated.h"
 
 class UAttributeSet;
 class UAbilitySystemComponent;
-
-UCLASS(Abstract)
-class BOUNTYCHASE_API ABountyCharacterBase : public ACharacter, public IAbilitySystemInterface
+/**
+ * 
+ */
+UCLASS()
+class BOUNTYCHASE_API ABountyPlayerState : public APlayerState, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
-
 public:
-	ABountyCharacterBase();
+	ABountyPlayerState();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const;
 protected:
-	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere, Category="Combat")
-	TObjectPtr<USkeletalMeshComponent> Weapon;
-
+	
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	

@@ -12,6 +12,16 @@ ABountyCharacterBase::ABountyCharacterBase()
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+UAbilitySystemComponent* ABountyCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+UAttributeSet* ABountyCharacterBase::GetAttributeSet() const
+{
+	return AttributeSet;
+}
+
 void ABountyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();

@@ -18,7 +18,12 @@ class BOUNTYCHASE_API ABountyCharacter : public ABountyCharacterBase
 	GENERATED_BODY()
 public:
 	ABountyCharacter();
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
 
+private:
+	void InitAbilityActorInfo();
+	
 private:
 	UPROPERTY(EditAnywhere, Category="Movement")
 	FRotator RotationRate = FRotator(0.f, 500.f, 0.f);

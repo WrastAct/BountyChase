@@ -16,6 +16,12 @@ class BOUNTYCHASE_API ABountyEnemy : public ABountyCharacterBase, public IHighli
 	GENERATED_BODY()
 public:
 	ABountyEnemy();
+
+	//~ Begin IHighlightInterface
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
+	//~ End IHighlightInterface
+	
+protected:
+	virtual void BeginPlay() override;
 };
