@@ -7,7 +7,9 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Player/BountyPlayerController.h"
 #include "Player/BountyPlayerState.h"
+#include "UI/HUD/BountyHUD.h"
 
 ABountyCharacter::ABountyCharacter()
 {
@@ -52,4 +54,13 @@ void ABountyCharacter::InitAbilityActorInfo()
 	BountyPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(BountyPlayerState, this);
 	AbilitySystemComponent = BountyPlayerState->GetAbilitySystemComponent();
 	AttributeSet = BountyPlayerState->GetAttributeSet();
+
+	if (ABountyPlayerController* BountyPlayerController = Cast<ABountyPlayerController>(GetController()))
+	{
+		 if (ABountyHUD* BountyHUD = Cast<ABountyHUD>(BountyPlayerController->GetHUD()))
+		 {
+			 BountyHUD->InitOverlay(BountyPlayerController, BountyPlayerState, AbilitySystemComponent, AttributeSet);
+		 }
+	}
+	
 }

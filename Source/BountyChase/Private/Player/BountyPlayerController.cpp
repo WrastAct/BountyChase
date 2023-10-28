@@ -17,8 +17,10 @@ void ABountyPlayerController::BeginPlay()
 	check(BountyContext);
 
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-	Subsystem->AddMappingContext(BountyContext, 0);
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(BountyContext, 0);
+	}
 }
 
 void ABountyPlayerController::SetupInputComponent()

@@ -10,3 +10,8 @@ void UBountyWidgetController::SetWidgetControllerParams(const FWidgetControllerP
 	AbilitySystemComponent = WCParams.AbilitySystemComponent;
 	AttributeSet = WCParams.AttributeSet;
 }
+
+void UBountyWidgetController::BroadcastInitialValues()
+{
+	
+}

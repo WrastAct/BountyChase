@@ -6,7 +6,7 @@
 
 UBountyAttributeSet::UBountyAttributeSet()
 {
-	InitHealth(100.f);
+	InitHealth(75.f);
 	InitMaxHealth(100.f);
 	InitStamina(100.f);
 	InitMaxStamina(100.f);
