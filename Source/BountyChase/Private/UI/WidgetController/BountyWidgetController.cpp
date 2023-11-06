@@ -15,3 +15,8 @@ void UBountyWidgetController::BroadcastInitialValues()
 {
 	
 }
+
+void UBountyWidgetController::BindCallbacksToDependencies()
+{
+	
+}
