@@ -28,3 +28,7 @@ void ABountyCharacterBase::BeginPlay()
 	
 }
 
+void ABountyCharacterBase::InitAbilityActorInfo()
+{
+}
+

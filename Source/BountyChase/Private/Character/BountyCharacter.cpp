@@ -4,6 +4,7 @@
 #include "..\..\Public\Character\BountyCharacter.h"
 
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/BountyAbilitySystemComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -52,6 +53,7 @@ void ABountyCharacter::InitAbilityActorInfo()
 	ABountyPlayerState* BountyPlayerState = GetPlayerState<ABountyPlayerState>();
 	check(BountyPlayerState);
 	BountyPlayerState->GetAbilitySystemComponent()->InitAbilityActorInfo(BountyPlayerState, this);
+	Cast<UBountyAbilitySystemComponent>(BountyPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 	AbilitySystemComponent = BountyPlayerState->GetAbilitySystemComponent();
 	AttributeSet = BountyPlayerState->GetAttributeSet();
 
