@@ -6,6 +6,8 @@
 #include "AbilitySystemComponent.h"
 #include "BountyAbilitySystemComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags, const FGameplayTagContainer& /*AssetTags*/);
+
 /**
  * 
  */
@@ -15,7 +17,8 @@ class BOUNTYCHASE_API UBountyAbilitySystemComponent : public UAbilitySystemCompo
 	GENERATED_BODY()
 public:
 	void AbilityActorInfoSet();
-
+	
+	FEffectAssetTags EffectAssetTags;
 protected:
 	void EffectApplied(UAbilitySystemComponent* AbilitySystemComponent, const FGameplayEffectSpec& EffectSpec,
 	                   FActiveGameplayEffectHandle ActiveEffectHandle);
