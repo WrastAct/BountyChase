@@ -64,5 +64,6 @@ void ABountyCharacter::InitAbilityActorInfo()
 			 BountyHUD->InitOverlay(BountyPlayerController, BountyPlayerState, AbilitySystemComponent, AttributeSet);
 		 }
 	}
-	
+
+	InitializePrimaryAttributes();
 }
