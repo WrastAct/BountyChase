@@ -2,6 +2,7 @@
 
 
 #include "Character/BountyCharacterBase.h"
+#include "AbilitySystemComponent.h"
 
 ABountyCharacterBase::ABountyCharacterBase()
 {
@@ -30,5 +31,16 @@ void ABountyCharacterBase::BeginPlay()
 
 void ABountyCharacterBase::InitAbilityActorInfo()
 {
+}
+
+void ABountyCharacterBase::InitializePrimaryAttributes() const
+{
+	check(IsValid(GetAbilitySystemComponent()));
+	check(DefaultPrimaryAttributes);
+	
+	const FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(
+		DefaultPrimaryAttributes, 1.f, ContextHandle);
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*SpecHandle.Data.Get(), GetAbilitySystemComponent());
 }
 
