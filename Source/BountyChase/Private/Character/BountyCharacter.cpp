@@ -65,5 +65,5 @@ void ABountyCharacter::InitAbilityActorInfo()
 		 }
 	}
 
-	InitializePrimaryAttributes();
+	InitializeDefaultAttributes();
 }

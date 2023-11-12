@@ -10,10 +10,6 @@
 
 UBountyAttributeSet::UBountyAttributeSet()
 {
-	InitHealth(75.f);
-	InitMaxHealth(100.f);
-	InitStamina(100.f);
-	InitMaxStamina(100.f);
 }
 
 void UBountyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
