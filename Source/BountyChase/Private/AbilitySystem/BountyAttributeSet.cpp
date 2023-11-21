@@ -21,7 +21,7 @@ void UBountyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	DOREPLIFETIME_CONDITION_NOTIFY(UBountyAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBountyAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBountyAttributeSet, Darkness, COND_None, REPNOTIFY_Always);
-	
+
 	DOREPLIFETIME_CONDITION_NOTIFY(UBountyAttributeSet, AttackDamage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBountyAttributeSet, SpellDamage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UBountyAttributeSet, CooldownReduction, COND_None, REPNOTIFY_Always);
@@ -50,7 +50,8 @@ void UBountyAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute
 	}
 }
 
-void UBountyAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props) const
+void UBountyAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data,
+                                              FEffectProperties& Props) const
 {
 	Props.EffectContextHandle = Data.EffectSpec.GetContext();
 	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();

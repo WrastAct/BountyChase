@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
+#include "AbilitySystem/BountyAttributeSet.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -56,6 +57,20 @@ void ABountyCharacter::InitAbilityActorInfo()
 	Cast<UBountyAbilitySystemComponent>(BountyPlayerState->GetAbilitySystemComponent())->AbilityActorInfoSet();
 	AbilitySystemComponent = BountyPlayerState->GetAbilitySystemComponent();
 	AttributeSet = BountyPlayerState->GetAttributeSet();
+
+	// TODO: Implement in its own function in base class
+	// Might be not the most suitable place for character movement manipulation
+	// Should be implemented in base class because enemies should be affected too
+	// Might be manipulated in Attribute Set via PostAttributeChange, but it feels odd to change Movement Component
+	// of  characters outside of characters themselves
+	const UBountyAttributeSet* BountyAttributeSet = Cast<UBountyAttributeSet>(AttributeSet);
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
+		BountyAttributeSet->GetMovementSpeedAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				GetCharacterMovement()->MaxWalkSpeed = Data.NewValue;	
+			}
+	);
 
 	if (ABountyPlayerController* BountyPlayerController = Cast<ABountyPlayerController>(GetController()))
 	{
