@@ -4,6 +4,7 @@
 #include "UI/HUD/BountyHUD.h"
 
 #include "UI/Widget/BountyUserWidget.h"
+#include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
 
 UOverlayWidgetController* ABountyHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
@@ -18,6 +19,20 @@ UOverlayWidgetController* ABountyHUD::GetOverlayWidgetController(const FWidgetCo
 	}
 
 	return OverlayWidgetController;
+}
+
+UAttributeMenuWidgetController* ABountyHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if (AttributeMenuWidgetController == nullptr)
+	{
+		AttributeMenuWidgetController = NewObject<UAttributeMenuWidgetController>(this, AttributeMenuWidgetControllerClass);
+		AttributeMenuWidgetController->SetWidgetControllerParams(WCParams);
+		AttributeMenuWidgetController->BindCallbacksToDependencies();
+
+		return AttributeMenuWidgetController;
+	}
+
+	return AttributeMenuWidgetController;
 }
 
 void ABountyHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
