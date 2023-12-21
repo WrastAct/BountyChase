@@ -3,6 +3,7 @@
 
 #include "Character/BountyCharacterBase.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/BountyAbilitySystemComponent.h"
 
 ABountyCharacterBase::ABountyCharacterBase()
 {
@@ -50,5 +51,13 @@ void ABountyCharacterBase::InitializeDefaultAttributes() const
 	ApplyEffectToSelf(DefaultPrimaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultSecondaryAttributes, 1.f);
 	ApplyEffectToSelf(DefaultVitalAttributes, 1.f);
+}
+
+void ABountyCharacterBase::AddCharacterAbilities()
+{
+	UBountyAbilitySystemComponent* BountyASC = CastChecked<UBountyAbilitySystemComponent>(AbilitySystemComponent);
+	if (!HasAuthority()) return;
+
+	BountyASC->AddCharacterAbilities(StartupAbilities);
 }
 

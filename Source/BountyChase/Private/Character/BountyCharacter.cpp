@@ -39,6 +39,7 @@ void ABountyCharacter::PossessedBy(AController* NewController)
 
 	// Server
 	InitAbilityActorInfo();
+	AddCharacterAbilities();
 }
 
 void ABountyCharacter::OnRep_PlayerState()

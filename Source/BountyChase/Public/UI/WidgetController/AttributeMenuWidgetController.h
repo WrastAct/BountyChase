@@ -6,6 +6,11 @@
 #include "UI/WidgetController/BountyWidgetController.h"
 #include "AttributeMenuWidgetController.generated.h"
 
+
+class UAttributeInfo;
+struct FBountyAttributeInfo;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoSignature, const FBountyAttributeInfo&, Info);
+
 /**
  * 
  */
@@ -18,55 +23,15 @@ public:
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbacksToDependencies() override;
 
-	UPROPERTY(BlueprintAssignable, Category="GAS|Primary Attributes")
-	FOnAttributeChangedSignature OnLuckChanged;
-	
-	UPROPERTY(BlueprintAssignable, Category="GAS|Primary Attributes")
-	FOnAttributeChangedSignature OnAgilityChanged;
+	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	FAttributeInfoSignature AttributeInfoDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category="GAS|Primary Attributes")
-	FOnAttributeChangedSignature OnStrengthChanged;
-	
-	UPROPERTY(BlueprintAssignable, Category="GAS|Primary Attributes")
-	FOnAttributeChangedSignature OnIntelligenceChanged;
+protected:
 
-	UPROPERTY(BlueprintAssignable, Category="GAS|Primary Attributes")
-	FOnAttributeChangedSignature OnDarknessChanged;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAttributeInfo> AttributeInfo;
 
+private:
 
-	
-	UPROPERTY(BlueprintAssignable, Category="GAS|Secondary Attributes")
-	FOnAttributeChangedSignature OnAttackDamageChanged;
-
-	UPROPERTY(BlueprintAssignable, Category="GAS|Secondary Attributes")
-	FOnAttributeChangedSignature OnSpellDamageChanged;
-	
-	UPROPERTY(BlueprintAssignable, Category="GAS|Secondary Attributes")
-	FOnAttributeChangedSignature OnCooldownReductionChanged;
-
-	UPROPERTY(BlueprintAssignable, Category="GAS|Secondary Attributes")
-	FOnAttributeChangedSignature OnMovementSpeedChanged;
-	
-	UPROPERTY(BlueprintAssignable, Category="GAS|Secondary Attributes")
-	FOnAttributeChangedSignature OnAttackSpeedChanged;
-
-	UPROPERTY(BlueprintAssignable, Category="GAS|Secondary Attributes")
-	FOnAttributeChangedSignature OnRollSpeedChanged;
-	
-	UPROPERTY(BlueprintAssignable, Category="GAS|Secondary Attributes")
-	FOnAttributeChangedSignature OnDodgeChanceChanged;
-
-	UPROPERTY(BlueprintAssignable, Category="GAS|Secondary Attributes")
-	FOnAttributeChangedSignature OnMaxHealthChanged;
-	
-	UPROPERTY(BlueprintAssignable, Category="GAS|Secondary Attributes")
-	FOnAttributeChangedSignature OnMaxStaminaChanged;
-
-	
-
-	UPROPERTY(BlueprintAssignable, Category="GAS|Vital Attributes")
-	FOnAttributeChangedSignature OnHealthChanged;
-	
-	UPROPERTY(BlueprintAssignable, Category="GAS|Vital Attributes")
-	FOnAttributeChangedSignature OnStaminaChanged;
+	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const;
 };
