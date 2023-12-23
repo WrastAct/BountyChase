@@ -33,7 +33,14 @@ public:
 	
 	FGameplayTag Attributes_Vital_Health;
 	FGameplayTag Attributes_Vital_Stamina;
+
+	FGameplayTag InputTag_LMB;
+	FGameplayTag InputTag_RMB;
+	FGameplayTag InputTag_Q;
+	FGameplayTag InputTag_F;
 protected:
+
+	
 
 private:
     static FBountyGameplayTags GameplayTags;

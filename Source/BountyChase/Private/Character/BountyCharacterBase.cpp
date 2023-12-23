@@ -27,7 +27,15 @@ UAttributeSet* ABountyCharacterBase::GetAttributeSet() const
 void ABountyCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+}
+
+FVector ABountyCharacterBase::GetCombatSocketLocation()
+{
+	if (Weapon->GetSkeletalMeshAsset())
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+	return GetMesh()->GetSocketLocation(FName("WeaponHandSocket"));
 }
 
 void ABountyCharacterBase::InitAbilityActorInfo()
@@ -38,7 +46,7 @@ void ABountyCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> Gamepl
 {
 	check(IsValid(GetAbilitySystemComponent()));
 	check(GameplayEffectClass);
-	
+
 	FGameplayEffectContextHandle ContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
 	ContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle SpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(
@@ -60,4 +68,3 @@ void ABountyCharacterBase::AddCharacterAbilities()
 
 	BountyASC->AddCharacterAbilities(StartupAbilities);
 }
-

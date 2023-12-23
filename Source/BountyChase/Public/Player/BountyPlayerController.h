@@ -5,12 +5,15 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "GameFramework/PlayerController.h"
+#include "GameplayTagContainer.h"
 #include "BountyPlayerController.generated.h"
 
 
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
+class UBountyInputConfig;
+class UBountyAbilitySystemComponent;
 
 /**
  * 
@@ -40,4 +43,16 @@ private:
 	void Move(const FInputActionValue& InputActionValue);
 	void Look(const FInputActionValue& InputActionValue);
 	void Dash(const FInputActionValue& InputActionValue);
+
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputTagHeld(FGameplayTag InputTag);
+
+	UPROPERTY(EditDefaultsOnly, Category="Input")
+	TObjectPtr<UBountyInputConfig> InputConfig;
+
+	UPROPERTY()
+	TObjectPtr<UBountyAbilitySystemComponent> BountyAbilitySystemComponent;
+
+	UBountyAbilitySystemComponent* GetASC();
 };
