@@ -4,13 +4,22 @@
 #include "Player/BountyPlayerController.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "BountyGameplayTags.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
 #include "Input/BountyInputComponent.h"
+#include "Interaction/EnemyInterface.h"
+#include "Interaction/HighlightInterface.h"
 
 ABountyPlayerController::ABountyPlayerController()
 {
 	bReplicates = true;
+}
+
+void ABountyPlayerController::PlayerTick(float DeltaTime)
+{
+	Super::PlayerTick(DeltaTime);
+	CursorTrace();
 }
 
 void ABountyPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
@@ -52,6 +61,14 @@ void ABountyPlayerController::BeginPlay()
 	{
 		Subsystem->AddMappingContext(BountyContext, 0);
 	}
+	
+	bShowMouseCursor = true;
+	DefaultMouseCursor = EMouseCursor::Default;
+
+	FInputModeGameAndUI InputModeData;
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	InputModeData.SetHideCursorDuringCapture(false);
+	SetInputMode(InputModeData);
 }
 
 void ABountyPlayerController::SetupInputComponent()
@@ -61,11 +78,49 @@ void ABountyPlayerController::SetupInputComponent()
 	UBountyInputComponent* BountyInputComponent = CastChecked<UBountyInputComponent>(InputComponent);
 
 	BountyInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ABountyPlayerController::Move);
-	BountyInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABountyPlayerController::Look);
+	// BountyInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ABountyPlayerController::Look);
 	BountyInputComponent->BindAction(DashAction, ETriggerEvent::Started, this, &ABountyPlayerController::Dash);
 
 	BountyInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed,
 	                                         &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+}
+
+void ABountyPlayerController::CursorTrace()
+{
+	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
+	if (!CursorHit.bBlockingHit) return;
+	
+	LastActor = ThisActor;
+	if (IsValid(CursorHit.GetActor()) && CursorHit.GetActor()->Implements<UHighlightInterface>())
+	{
+		ThisActor = CursorHit.GetActor();
+	}
+	else
+	{
+		ThisActor = nullptr;
+	}
+	
+	if (LastActor != ThisActor)
+	{
+		UnHighlightActor(LastActor);
+		HighlightActor(ThisActor);
+	}
+}
+
+void ABountyPlayerController::HighlightActor(AActor* InActor)
+{
+	if (IsValid(InActor) && InActor->Implements<UHighlightInterface>())
+	{
+		IHighlightInterface::Execute_HighlightActor(InActor);
+	}
+}
+
+void ABountyPlayerController::UnHighlightActor(AActor* InActor)
+{
+	if (IsValid(InActor) && InActor->Implements<UHighlightInterface>())
+	{
+		IHighlightInterface::Execute_UnHighlightActor(InActor);
+	}
 }
 
 void ABountyPlayerController::Move(const FInputActionValue& InputActionValue)

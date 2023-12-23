@@ -21,16 +21,19 @@ ABountyCharacter::ABountyCharacter()
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = RotationRate;
+	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.f;	
-	CameraBoom->bUsePawnControlRotation = true;
+	CameraBoom->SetupAttachment(GetRootComponent());
+	CameraBoom->SetUsingAbsoluteRotation(true);
+	CameraBoom->bDoCollisionTest = false;
+	// CameraBoom->TargetArmLength = 400.f;	
+	// CameraBoom->bUsePawnControlRotation = false;
 
-	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
-	FollowCamera->bUsePawnControlRotation = false;
+	TopDownCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
+	TopDownCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); 
+	TopDownCamera->bUsePawnControlRotation = false;
 }
 
 void ABountyCharacter::PossessedBy(AController* NewController)

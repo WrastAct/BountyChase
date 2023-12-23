@@ -32,5 +32,5 @@ private:
 	USpringArmComponent* CameraBoom;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Camera", meta=(AllowPrivateAccess = "true"))
-	UCameraComponent* FollowCamera;
+	UCameraComponent* TopDownCamera;
 };
