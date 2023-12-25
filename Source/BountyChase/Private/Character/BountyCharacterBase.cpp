@@ -4,11 +4,15 @@
 #include "Character/BountyCharacterBase.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
+#include "Components/CapsuleComponent.h"
 
 ABountyCharacterBase::ABountyCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
 
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
 	Weapon->SetCollisionEnabled(ECollisionEnabled::NoCollision);

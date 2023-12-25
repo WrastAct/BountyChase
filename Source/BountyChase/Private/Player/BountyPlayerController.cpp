@@ -29,14 +29,12 @@ void ABountyPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void ABountyPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	if (GetASC() == nullptr) return;
-	GetASC()->AbilityInputTagReleased(InputTag);
+	if (GetASC()) GetASC()->AbilityInputTagReleased(InputTag);
 }
 
 void ABountyPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	if (GetASC() == nullptr) return;
-	GetASC()->AbilityInputTagHeld(InputTag);
+	if (GetASC()) GetASC()->AbilityInputTagHeld(InputTag);
 }
 
 UBountyAbilitySystemComponent* ABountyPlayerController::GetASC()

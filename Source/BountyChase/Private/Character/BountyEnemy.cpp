@@ -11,9 +11,6 @@
 ABountyEnemy::ABountyEnemy()
 {
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-	
-	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
-	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 
 	AbilitySystemComponent = CreateDefaultSubobject<UBountyAbilitySystemComponent>("AbilitySystemComponent");
 	AbilitySystemComponent->SetIsReplicated(true);
@@ -25,18 +22,17 @@ ABountyEnemy::ABountyEnemy()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	
 	AttributeSet = CreateDefaultSubobject<UBountyAttributeSet>("AttributeSet");
-	
-	/*
+
+	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	GetMesh()->MarkRenderStateDirty();
-	Weapon->MarkRenderStateDirty();*/
+	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
+	Weapon->MarkRenderStateDirty();
 }
 
 void ABountyEnemy::HighlightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(true);
-	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	Weapon->SetRenderCustomDepth(true);
-	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 }
 
 void ABountyEnemy::UnHighlightActor_Implementation()

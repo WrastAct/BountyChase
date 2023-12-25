@@ -2,6 +2,8 @@
 
 
 #include "BountyAssetManager.h"
+
+#include "AbilitySystemGlobals.h"
 #include "BountyGameplayTags.h"
 
 UBountyAssetManager& UBountyAssetManager::Get()
@@ -17,4 +19,6 @@ void UBountyAssetManager::StartInitialLoading()
 	Super::StartInitialLoading();
 
 	FBountyGameplayTags::InitializeNativeGameplayTags();
+	
+	UAbilitySystemGlobals::Get().InitGlobalData();
 }
