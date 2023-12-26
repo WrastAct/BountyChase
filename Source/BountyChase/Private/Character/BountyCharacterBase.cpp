@@ -4,6 +4,7 @@
 #include "Character/BountyCharacterBase.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
+#include "BountyChase/BountyChase.h"
 #include "Components/CapsuleComponent.h"
 
 ABountyCharacterBase::ABountyCharacterBase()
@@ -11,7 +12,10 @@ ABountyCharacterBase::ABountyCharacterBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
 	
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));
@@ -26,6 +30,31 @@ UAbilitySystemComponent* ABountyCharacterBase::GetAbilitySystemComponent() const
 UAttributeSet* ABountyCharacterBase::GetAttributeSet() const
 {
 	return AttributeSet;
+}
+
+UAnimMontage* ABountyCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
+void ABountyCharacterBase::Die()
+{
+	Weapon->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	MulticastHandleDeath();
+}
+
+void ABountyCharacterBase::MulticastHandleDeath_Implementation()
+{
+	Weapon->SetSimulatePhysics(true);
+	Weapon->SetEnableGravity(true);
+	Weapon->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetEnableGravity(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABountyCharacterBase::BeginPlay()

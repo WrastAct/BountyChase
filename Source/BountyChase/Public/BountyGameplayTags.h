@@ -38,6 +38,10 @@ public:
 	FGameplayTag InputTag_RMB;
 	FGameplayTag InputTag_Q;
 	FGameplayTag InputTag_F;
+	
+	FGameplayTag Damage;
+
+	FGameplayTag Effects_HitReact;
 protected:
 
 	
