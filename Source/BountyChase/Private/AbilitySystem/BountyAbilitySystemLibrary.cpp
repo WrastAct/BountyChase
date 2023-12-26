@@ -70,3 +70,16 @@ void UBountyAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* Wor
 	const FGameplayEffectSpecHandle VitalAttributesSpecHandle = ASC->MakeOutgoingSpec(CharacterClassInfo->VitalAttributes, Level, VitalAttributesContextHandle);
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalAttributesSpecHandle.Data.Get());
 }
+
+void UBountyAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+{
+	ABountyGameModeBase* BountyGameMode = Cast<ABountyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (BountyGameMode == nullptr) return;
+
+	UCharacterClassInfo* CharacterClassInfo = BountyGameMode->CharacterClassInfo;
+	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
+		ASC->GiveAbility(AbilitySpec);
+	}
+}

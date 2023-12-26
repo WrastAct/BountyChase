@@ -3,6 +3,7 @@
 
 #include "Character/BountyEnemy.h"
 
+#include "BountyGameplayTags.h"
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
 #include "AbilitySystem/BountyAbilitySystemLibrary.h"
 #include "AbilitySystem/BountyAttributeSet.h"
@@ -57,10 +58,24 @@ AActor* ABountyEnemy::GetCombatTarget_Implementation() const
 	return CombatTarget;
 }
 
+void ABountyEnemy::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();
+}
+
+void ABountyEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bHitReacting = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+}
+
 void ABountyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 	InitAbilityActorInfo();
+	UBountyAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 
 	if (UBountyUserWidget* BountyUserWidget = Cast<UBountyUserWidget>(HealthBar->GetUserWidgetObject()))
 	{
@@ -80,6 +95,10 @@ void ABountyEnemy::BeginPlay()
 			{
 				OnMaxHealthChanged.Broadcast(Data.NewValue);
 			}
+		);
+		AbilitySystemComponent->RegisterGameplayTagEvent(FBountyGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
+			this,
+			&ABountyEnemy::HitReactTagChanged
 		);
 
 		OnHealthChanged.Broadcast(BountyAS->GetHealth());

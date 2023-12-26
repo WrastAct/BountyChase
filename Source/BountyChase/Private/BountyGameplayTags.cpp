@@ -70,4 +70,14 @@ void FBountyGameplayTags::InitializeNativeGameplayTags()
 	
 	GameplayTags.InputTag_F = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("InputTag.F"), FString("Input Tag for F key"));
+
+	GameplayTags.Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage"),
+		FString("Damage")
+	);
+
+	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Effects.HitReact"),
+		FString("Tag granted when Hit Reacting")
+	);
 }
