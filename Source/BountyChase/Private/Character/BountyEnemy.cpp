@@ -4,6 +4,7 @@
 #include "Character/BountyEnemy.h"
 
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
+#include "AbilitySystem/BountyAbilitySystemLibrary.h"
 #include "AbilitySystem/BountyAttributeSet.h"
 #include "BountyChase/BountyChase.h"
 #include "Components/WidgetComponent.h"
@@ -92,4 +93,9 @@ void ABountyEnemy::InitAbilityActorInfo()
 	Cast<UBountyAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
 	
 	InitializeDefaultAttributes();
+}
+
+void ABountyEnemy::InitializeDefaultAttributes() const
+{
+	UBountyAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, 1, AbilitySystemComponent);
 }
