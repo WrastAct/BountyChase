@@ -4,6 +4,7 @@
 #include "Character/BountyCharacterBase.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
+#include "BountyChase/BountyChase.h"
 #include "Components/CapsuleComponent.h"
 
 ABountyCharacterBase::ABountyCharacterBase()
@@ -11,7 +12,10 @@ ABountyCharacterBase::ABountyCharacterBase()
 	PrimaryActorTick.bCanEverTick = false;
 
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 	GetMesh()->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Projectile, ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
 	
 	Weapon = CreateDefaultSubobject<USkeletalMeshComponent>("Weapon");
 	Weapon->SetupAttachment(GetMesh(), FName("WeaponHandSocket"));

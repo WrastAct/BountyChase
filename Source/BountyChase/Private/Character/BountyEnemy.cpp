@@ -6,7 +6,9 @@
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
 #include "AbilitySystem/BountyAttributeSet.h"
 #include "BountyChase/BountyChase.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "UI/Widget/BountyUserWidget.h"
 
 ABountyEnemy::ABountyEnemy()
 {
@@ -22,6 +24,9 @@ ABountyEnemy::ABountyEnemy()
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
 	
 	AttributeSet = CreateDefaultSubobject<UBountyAttributeSet>("AttributeSet");
+
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
 
 	GetMesh()->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	GetMesh()->MarkRenderStateDirty();
@@ -55,10 +60,36 @@ void ABountyEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 	InitAbilityActorInfo();
+
+	if (UBountyUserWidget* BountyUserWidget = Cast<UBountyUserWidget>(HealthBar->GetUserWidgetObject()))
+	{
+		BountyUserWidget->SetWidgetController(this);
+	}
+
+	if (const UBountyAttributeSet* BountyAS = Cast<UBountyAttributeSet>(AttributeSet))
+	{
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BountyAS->GetHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnHealthChanged.Broadcast(Data.NewValue);
+			}
+		);
+		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(BountyAS->GetMaxHealthAttribute()).AddLambda(
+			[this](const FOnAttributeChangeData& Data)
+			{
+				OnMaxHealthChanged.Broadcast(Data.NewValue);
+			}
+		);
+
+		OnHealthChanged.Broadcast(BountyAS->GetHealth());
+		OnMaxHealthChanged.Broadcast(BountyAS->GetMaxHealth());
+	}
 }
 
 void ABountyEnemy::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UBountyAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
+	
+	InitializeDefaultAttributes();
 }
