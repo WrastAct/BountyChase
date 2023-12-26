@@ -47,12 +47,9 @@ UAttributeMenuWidgetController* UBountyAbilitySystemLibrary::GetAttributeMenuWid
 void UBountyAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject,
 	ECharacterClass CharacterClass, float Level, UAbilitySystemComponent* ASC)
 {
-	const ABountyGameModeBase* BountyGameMode = Cast<ABountyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (BountyGameMode == nullptr) return;
-
 	const AActor* AvatarActor = ASC->GetAvatarActor();
 
-	UCharacterClassInfo* CharacterClassInfo = BountyGameMode->CharacterClassInfo;
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 	const FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
 
 	FGameplayEffectContextHandle PrimaryAttributesContextHandle = ASC->MakeEffectContext();
@@ -73,13 +70,17 @@ void UBountyAbilitySystemLibrary::InitializeDefaultAttributes(const UObject* Wor
 
 void UBountyAbilitySystemLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
-	ABountyGameModeBase* BountyGameMode = Cast<ABountyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (BountyGameMode == nullptr) return;
-
-	UCharacterClassInfo* CharacterClassInfo = BountyGameMode->CharacterClassInfo;
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 	for (TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
 	{
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1);
 		ASC->GiveAbility(AbilitySpec);
 	}
+}
+
+UCharacterClassInfo* UBountyAbilitySystemLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
+{
+	ABountyGameModeBase* BountyGameMode = Cast<ABountyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (BountyGameMode == nullptr) return nullptr;
+	return BountyGameMode->CharacterClassInfo;
 }
