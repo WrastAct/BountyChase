@@ -3,6 +3,10 @@
   <component name="ChangeListManager">
     <list default="true" id="1e66b922-54db-4285-a736-1edd8354c1d4" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/BountyChase.uproject" beforeDir="false" afterPath="$PROJECT_DIR$/BountyChase.uproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Config/DefaultInput.ini" beforeDir="false" afterPath="$PROJECT_DIR$/Config/DefaultInput.ini" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/MICKEY.TTF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Minnie.TTF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Pause.uasset" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,7 +21,7 @@
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "margo",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -30,6 +34,7 @@
       <option name="presentableId" value="Default" />
       <updated>1703005777921</updated>
       <workItem from="1703005783025" duration="41000" />
+      <workItem from="1703547012764" duration="14000" />
     </task>
     <servers />
   </component>
