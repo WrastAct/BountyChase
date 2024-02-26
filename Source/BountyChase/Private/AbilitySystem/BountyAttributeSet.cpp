@@ -6,9 +6,12 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "BountyGameplayTags.h"
 #include "GameplayEffectExtension.h"
+#include "AbilitySystem/BountyAbilitySystemLibrary.h"
 #include "GameFramework/Character.h"
 #include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
+#include "Player/BountyPlayerController.h"
 
 UBountyAttributeSet::UBountyAttributeSet()
 {
@@ -108,6 +111,17 @@ void UBountyAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackDa
 	}
 }
 
+void UBountyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float Damage, bool bDodgedHit) const
+{
+	if (Props.SourceCharacter != Props.TargetCharacter)
+	{
+		if(ABountyPlayerController* PC = Cast<ABountyPlayerController>(Props.SourceCharacter->Controller))
+		{
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bDodgedHit);
+		}
+	}
+}
+
 void UBountyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
@@ -127,6 +141,9 @@ void UBountyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
 		SetIncomingDamage(0.f);
+
+		const bool bDodged = UBountyAbilitySystemLibrary::IsDodgedHit(Props.EffectContextHandle);
+		
 		if (LocalIncomingDamage > 0.f)
 		{
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
@@ -147,6 +164,13 @@ void UBountyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCall
 				TagContainer.AddTag(FBountyGameplayTags::Get().Effects_HitReact);
 				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
 			}
+			
+			ShowFloatingText(Props, LocalIncomingDamage, bDodged);
+		}
+
+		if (bDodged)
+		{
+			ShowFloatingText(Props, 0, bDodged);
 		}
 	}
 }

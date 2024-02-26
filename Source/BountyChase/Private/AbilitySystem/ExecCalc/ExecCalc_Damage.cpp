@@ -5,6 +5,8 @@
 
 #include "AbilitySystemComponent.h"
 #include "BountyGameplayTags.h"
+#include "BountyAbilityTypes.h"
+#include "AbilitySystem/BountyAbilitySystemLibrary.h"
 #include "AbilitySystem/BountyAttributeSet.h"
 
 struct BountyDamageStatics
@@ -48,12 +50,23 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
-	float Damage = Spec.GetSetByCallerMagnitude(FBountyGameplayTags::Get().Damage);
+	float Damage = 0.f;
+	for (FGameplayTag DamageTypeTag : FBountyGameplayTags::Get().DamageTypes)
+	{
+		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag);
+		Damage += DamageTypeValue;
+	}
+	
 	float TargetDodgeChance = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DodgeChanceDef, EvaluationParameters, TargetDodgeChance);
 	TargetDodgeChance = FMath::Max<float>(TargetDodgeChance, 0.f);
 	
 	const bool bDodged = FMath::RandRange(1, 100) < TargetDodgeChance;
+
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+
+	UBountyAbilitySystemLibrary::SetIsDodgedHit(EffectContextHandle, bDodged);
+	
 	Damage = bDodged ? 0 : Damage;
 
 	float SourceSpellDamage = 0.f;

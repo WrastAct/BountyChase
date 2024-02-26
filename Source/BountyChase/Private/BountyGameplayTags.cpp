@@ -75,6 +75,19 @@ void FBountyGameplayTags::InitializeNativeGameplayTags()
 		FName("Damage"),
 		FString("Damage")
 	);
+	
+	GameplayTags.Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage.Physical"),
+		FString("Physical Damage Type")
+	);
+
+	GameplayTags.Damage_Magical = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Damage.Magical"),
+		FString("Magical Damage Type")
+	);
+
+	GameplayTags.DamageTypes.Add(GameplayTags.Damage_Physical);
+	GameplayTags.DamageTypes.Add(GameplayTags.Damage_Magical);
 
 	GameplayTags.Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(
 		FName("Effects.HitReact"),

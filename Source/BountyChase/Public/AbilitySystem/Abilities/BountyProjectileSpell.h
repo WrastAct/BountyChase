@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/BountyGameplayAbility.h"
+#include "AbilitySystem/Abilities/BountyDamageGameplayAbility.h"
 #include "BountyProjectileSpell.generated.h"
 
 class ABountyProjectile;
@@ -13,7 +13,7 @@ class UGameplayEffect;
  * 
  */
 UCLASS()
-class BOUNTYCHASE_API UBountyProjectileSpell : public UBountyGameplayAbility
+class BOUNTYCHASE_API UBountyProjectileSpell : public UBountyDamageGameplayAbility
 {
 	GENERATED_BODY()
 
@@ -28,7 +28,4 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<ABountyProjectile> ProjectileClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

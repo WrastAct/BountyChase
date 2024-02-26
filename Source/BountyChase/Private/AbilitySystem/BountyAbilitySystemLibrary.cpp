@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/BountyAbilitySystemLibrary.h"
 
+#include "BountyAbilityTypes.h"
 #include "Game/BountyGameModeBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/WidgetController/BountyWidgetController.h"
@@ -89,4 +90,21 @@ UCharacterClassInfo* UBountyAbilitySystemLibrary::GetCharacterClassInfo(const UO
 	ABountyGameModeBase* BountyGameMode = Cast<ABountyGameModeBase>(UGameplayStatics::GetGameMode(WorldContextObject));
 	if (BountyGameMode == nullptr) return nullptr;
 	return BountyGameMode->CharacterClassInfo;
+}
+
+bool UBountyAbilitySystemLibrary::IsDodgedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FBountyGameplayEffectContext* BountyEffectContext = static_cast<const FBountyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return BountyEffectContext->IsDodgedHit();
+	}
+	return false;
+}
+
+void UBountyAbilitySystemLibrary::SetIsDodgedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsDodgedHit)
+{
+	if (FBountyGameplayEffectContext* BountyEffectContext = static_cast<FBountyGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		BountyEffectContext->SetIsDodgedHit(bInIsDodgedHit);
+	}
 }

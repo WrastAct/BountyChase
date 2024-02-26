@@ -40,6 +40,10 @@ public:
 	FGameplayTag InputTag_F;
 	
 	FGameplayTag Damage;
+	FGameplayTag Damage_Physical;
+	FGameplayTag Damage_Magical;
+
+	TArray<FGameplayTag> DamageTypes;
 
 	FGameplayTag Effects_HitReact;
 protected:

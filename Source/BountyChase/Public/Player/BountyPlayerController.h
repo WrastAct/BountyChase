@@ -9,6 +9,7 @@
 #include "BountyPlayerController.generated.h"
 
 
+class UDamageTextComponent;
 class UInputMappingContext;
 class UInputAction;
 struct FInputActionValue;
@@ -27,6 +28,8 @@ public:
 	ABountyPlayerController();
 	virtual void PlayerTick(float DeltaTime) override;
 
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter, bool bDodgedHit);
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
@@ -66,4 +69,7 @@ private:
 	TObjectPtr<UBountyAbilitySystemComponent> BountyAbilitySystemComponent;
 
 	UBountyAbilitySystemComponent* GetASC();
+	
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
 };
