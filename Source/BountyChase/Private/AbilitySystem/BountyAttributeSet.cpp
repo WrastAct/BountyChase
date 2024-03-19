@@ -119,6 +119,10 @@ void UBountyAttributeSet::ShowFloatingText(const FEffectProperties& Props, float
 		{
 			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bDodgedHit);
 		}
+		if(ABountyPlayerController* PC = Cast<ABountyPlayerController>(Props.TargetCharacter->Controller))
+		{
+			PC->ShowDamageNumber(Damage, Props.TargetCharacter, bDodgedHit);
+		}
 	}
 }
 

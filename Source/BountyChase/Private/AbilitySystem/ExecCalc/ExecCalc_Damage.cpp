@@ -53,7 +53,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	float Damage = 0.f;
 	for (FGameplayTag DamageTypeTag : FBountyGameplayTags::Get().DamageTypes)
 	{
-		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag);
+		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false);
 		Damage += DamageTypeValue;
 	}
 	

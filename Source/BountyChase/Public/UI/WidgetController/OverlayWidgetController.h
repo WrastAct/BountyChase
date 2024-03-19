@@ -6,6 +6,9 @@
 #include "UI/WidgetController/BountyWidgetController.h"
 #include "OverlayWidgetController.generated.h"
 
+class UAbilityInfo;
+struct FBountyAbilityInfo;
+
 USTRUCT(BlueprintType)
 struct FUIWidgetRow: public FTableRowBase
 {
@@ -25,6 +28,7 @@ struct FUIWidgetRow: public FTableRowBase
 };
 
 class UBountyUserWidget;
+class UBountyAbilitySystemComponent;
 
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature, float, NewValue);
@@ -55,14 +59,17 @@ public:
 	
 	UPROPERTY(BlueprintAssignable, Category="GAS|Messages")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
-	
+		
 protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
+	
 
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const;
 };
 
 template <typename T>

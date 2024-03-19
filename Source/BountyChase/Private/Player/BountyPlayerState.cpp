@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
 #include "AbilitySystem/BountyAttributeSet.h"
+#include "Net/UnrealNetwork.h"
 
 ABountyPlayerState::ABountyPlayerState()
 {
@@ -17,6 +18,13 @@ ABountyPlayerState::ABountyPlayerState()
 	NetUpdateFrequency = 100.f;
 }
 
+void ABountyPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ABountyPlayerState, SpellPoints);
+}
+
 UAbilitySystemComponent* ABountyPlayerState::GetAbilitySystemComponent() const
 {
 	return AbilitySystemComponent;
@@ -25,4 +33,15 @@ UAbilitySystemComponent* ABountyPlayerState::GetAbilitySystemComponent() const
 UAttributeSet* ABountyPlayerState::GetAttributeSet() const
 {
 	return AttributeSet;
+}
+
+void ABountyPlayerState::AddToSpellPoints(int32 InPoints)
+{
+	SpellPoints += InPoints;
+	OnSpellPointsChangedDelegate.Broadcast(SpellPoints);
+}
+
+void ABountyPlayerState::OnRep_SpellPoints(int32 OldSpellPoints)
+{
+	OnSpellPointsChangedDelegate.Broadcast(SpellPoints);
 }

@@ -18,6 +18,8 @@ ABountyCharacter::ABountyCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	CharacterClass = ECharacterClass::Mage;
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = RotationRate;
@@ -51,6 +53,35 @@ void ABountyCharacter::OnRep_PlayerState()
 
 	// Client
 	InitAbilityActorInfo();
+}
+
+int32 ABountyCharacter::GetSpellPoints_Implementation() const
+{
+	ABountyPlayerState* BountyPlayerState = GetPlayerState<ABountyPlayerState>();
+	check(BountyPlayerState);
+	return BountyPlayerState->GetSpellPoints();
+}
+
+int32 ABountyCharacter::GetSpellPointsReward_Implementation(int32 Level) const
+{
+	return Level;
+}
+
+void ABountyCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
+{
+	ABountyPlayerState* BountyPlayerState = GetPlayerState<ABountyPlayerState>();
+	check(BountyPlayerState);
+	BountyPlayerState->AddToSpellPoints(InSpellPoints);
+
+	if (UBountyAbilitySystemComponent* BountyASC = Cast<UBountyAbilitySystemComponent>(GetAbilitySystemComponent()))
+	{
+		BountyASC->UpdateAbilityStatuses(BountyPlayerState->GetSpellPoints());
+	}
+}
+
+int32 ABountyCharacter::GetPlayerLevel_Implementation()
+{
+	return 1;
 }
 
 void ABountyCharacter::InitAbilityActorInfo()

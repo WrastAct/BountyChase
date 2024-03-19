@@ -3,6 +3,8 @@
 
 #include "AbilitySystem/Data/AttributeInfo.h"
 
+#include "BountyChase/BountyLogChannels.h"
+
 FBountyAttributeInfo UAttributeInfo::FindAttributeInfoForTag(const FGameplayTag& AttributeTag, bool bLogNotFound) const
 {
 	for (const FBountyAttributeInfo& Info : AttributeInformation)
@@ -15,7 +17,7 @@ FBountyAttributeInfo UAttributeInfo::FindAttributeInfoForTag(const FGameplayTag&
 
 	if (bLogNotFound)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Can't find info for AttributeTag [%s] on AttributeInfo [%s]."),
+		UE_LOG(LogBounty, Error, TEXT("Can't find info for AttributeTag [%s] on AttributeInfo [%s]."),
 		       *AttributeTag.ToString(), *GetNameSafe(this));
 	}
 

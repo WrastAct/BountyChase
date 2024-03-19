@@ -3,6 +3,7 @@
 
 #include "Character/BountyCharacterBase.h"
 #include "AbilitySystemComponent.h"
+#include "BountyGameplayTags.h"
 #include "AbilitySystem/BountyAbilitySystemComponent.h"
 #include "BountyChase/BountyChase.h"
 #include "Components/CapsuleComponent.h"
@@ -56,6 +57,7 @@ void ABountyCharacterBase::MulticastHandleDeath_Implementation()
 
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Dissolve();
+	bDead = true;
 }
 
 void ABountyCharacterBase::BeginPlay()
@@ -63,13 +65,68 @@ void ABountyCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-FVector ABountyCharacterBase::GetCombatSocketLocation()
+FVector ABountyCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
 {
-	if (Weapon->GetSkeletalMeshAsset())
+	const FBountyGameplayTags& GameplayTags = FBountyGameplayTags::Get();
+	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_Weapon) && IsValid(Weapon))
 	{
-		return Weapon->GetSocketLocation(WeaponTipSocketName);
+		if (Weapon->GetSkeletalMeshAsset())
+		{
+			return Weapon->GetSocketLocation(WeaponTipSocketName);
+		}
+		return GetMesh()->GetSocketLocation(FName("WeaponHandSocket"));
 	}
-	return GetMesh()->GetSocketLocation(FName("WeaponHandSocket"));
+	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_LeftHand))
+	{
+		return GetMesh()->GetSocketLocation(LeftHandSocketName);
+	}
+	if (MontageTag.MatchesTagExact(GameplayTags.CombatSocket_RightHand))
+	{
+		return GetMesh()->GetSocketLocation(RightHandSocketName);
+	}
+	return FVector();
+}
+
+bool ABountyCharacterBase::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* ABountyCharacterBase::GetAvatar_Implementation()
+{
+	return this;
+}
+
+TArray<FTaggedMontage> ABountyCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttackMontages;
+}
+
+FTaggedMontage ABountyCharacterBase::GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag)
+{
+	for (FTaggedMontage TaggedMontage : AttackMontages)
+	{
+		if (TaggedMontage.MontageTag == MontageTag)
+		{
+			return TaggedMontage;
+		}
+	}
+	return FTaggedMontage();
+}
+
+int32 ABountyCharacterBase::GetMinionCount_Implementation()
+{
+	return MinionCount;
+}
+
+void ABountyCharacterBase::IncrementMinionCount_Implementation(int32 Amount)
+{
+	MinionCount += Amount;
+}
+
+ECharacterClass ABountyCharacterBase::GetCharacterClass_Implementation()
+{
+	return CharacterClass;
 }
 
 void ABountyCharacterBase::InitAbilityActorInfo()
@@ -101,6 +158,7 @@ void ABountyCharacterBase::AddCharacterAbilities()
 	if (!HasAuthority()) return;
 
 	BountyASC->AddCharacterAbilities(StartupAbilities);
+	BountyASC->AddCharacterPassiveAbilities(StartupPassiveAbilities);
 }
 
 void ABountyCharacterBase::Dissolve()

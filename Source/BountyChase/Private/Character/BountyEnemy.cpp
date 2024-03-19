@@ -9,6 +9,9 @@
 #include "AbilitySystem/BountyAttributeSet.h"
 #include "BountyChase/BountyChase.h"
 #include "Components/WidgetComponent.h"
+#include "AI/BountyAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "UI/Widget/BountyUserWidget.h"
 
@@ -24,7 +27,7 @@ ABountyEnemy::ABountyEnemy()
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bUseControllerDesiredRotation = true;
-	
+
 	AttributeSet = CreateDefaultSubobject<UBountyAttributeSet>("AttributeSet");
 
 	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
@@ -34,6 +37,19 @@ ABountyEnemy::ABountyEnemy()
 	GetMesh()->MarkRenderStateDirty();
 	Weapon->SetCustomDepthStencilValue(CUSTOM_DEPTH_RED);
 	Weapon->MarkRenderStateDirty();
+}
+
+void ABountyEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if (!HasAuthority()) return;
+	BountyAIController = Cast<ABountyAIController>(NewController);
+	BountyAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	BountyAIController->RunBehaviorTree(BehaviorTree);
+	BountyAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
+	BountyAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"),
+	                                                             CharacterClass != ECharacterClass::Warrior);
 }
 
 void ABountyEnemy::HighlightActor_Implementation()
@@ -46,6 +62,11 @@ void ABountyEnemy::UnHighlightActor_Implementation()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	Weapon->SetRenderCustomDepth(false);
+}
+
+int32 ABountyEnemy::GetPlayerLevel_Implementation()
+{
+	return Level;
 }
 
 void ABountyEnemy::SetCombatTarget_Implementation(AActor* InCombatTarget)
@@ -61,6 +82,8 @@ AActor* ABountyEnemy::GetCombatTarget_Implementation() const
 void ABountyEnemy::Die()
 {
 	SetLifeSpan(LifeSpan);
+	if (BountyAIController) BountyAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true);
+	
 	Super::Die();
 }
 
@@ -68,6 +91,10 @@ void ABountyEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewC
 {
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	if (BountyAIController && BountyAIController->GetBlackboardComponent())
+	{
+		BountyAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), bHitReacting);
+	}
 }
 
 void ABountyEnemy::BeginPlay()
@@ -77,7 +104,7 @@ void ABountyEnemy::BeginPlay()
 	InitAbilityActorInfo();
 	if (HasAuthority())
 	{
-		UBountyAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent);	
+		UBountyAbilitySystemLibrary::GiveStartupAbilities(this, AbilitySystemComponent, CharacterClass);
 	}
 
 	if (UBountyUserWidget* BountyUserWidget = Cast<UBountyUserWidget>(HealthBar->GetUserWidgetObject()))
@@ -99,7 +126,8 @@ void ABountyEnemy::BeginPlay()
 				OnMaxHealthChanged.Broadcast(Data.NewValue);
 			}
 		);
-		AbilitySystemComponent->RegisterGameplayTagEvent(FBountyGameplayTags::Get().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(
+		AbilitySystemComponent->RegisterGameplayTagEvent(FBountyGameplayTags::Get().Effects_HitReact,
+		                                                 EGameplayTagEventType::NewOrRemoved).AddUObject(
 			this,
 			&ABountyEnemy::HitReactTagChanged
 		);
@@ -113,14 +141,14 @@ void ABountyEnemy::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this, this);
 	Cast<UBountyAbilitySystemComponent>(AbilitySystemComponent)->AbilityActorInfoSet();
-	
+
 	if (HasAuthority())
 	{
-		InitializeDefaultAttributes();		
+		InitializeDefaultAttributes();
 	}
 }
 
 void ABountyEnemy::InitializeDefaultAttributes() const
 {
-	UBountyAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, 1, AbilitySystemComponent);
+	UBountyAbilitySystemLibrary::InitializeDefaultAttributes(this, CharacterClass, Level, AbilitySystemComponent);
 }

@@ -6,6 +6,7 @@
 #include "UI/Widget/BountyUserWidget.h"
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
+#include "UI/WidgetController/SpellMenuWidgetController.h"
 
 UOverlayWidgetController* ABountyHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
@@ -19,6 +20,17 @@ UOverlayWidgetController* ABountyHUD::GetOverlayWidgetController(const FWidgetCo
 	}
 
 	return OverlayWidgetController;
+}
+
+USpellMenuWidgetController* ABountyHUD::GetSpellMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if (SpellMenuWidgetController == nullptr)
+	{
+		SpellMenuWidgetController = NewObject<USpellMenuWidgetController>(this, SpellMenuWidgetControllerClass);
+		SpellMenuWidgetController->SetWidgetControllerParams(WCParams);
+		SpellMenuWidgetController->BindCallbacksToDependencies();
+	}
+	return SpellMenuWidgetController;
 }
 
 UAttributeMenuWidgetController* ABountyHUD::GetAttributeMenuWidgetController(const FWidgetControllerParams& WCParams)
