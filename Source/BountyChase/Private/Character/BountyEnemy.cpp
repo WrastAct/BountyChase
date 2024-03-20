@@ -50,6 +50,8 @@ void ABountyEnemy::PossessedBy(AController* NewController)
 	BountyAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"), false);
 	BountyAIController->GetBlackboardComponent()->SetValueAsBool(FName("RangedAttacker"),
 	                                                             CharacterClass != ECharacterClass::Warrior);
+	
+	AddCharacterAbilities();
 }
 
 void ABountyEnemy::HighlightActor_Implementation()

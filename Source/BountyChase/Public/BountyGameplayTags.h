@@ -52,6 +52,8 @@ public:
 	FGameplayTag Abilities_Summon;
 	FGameplayTag Abilities_Jump;
 
+	FGameplayTag Abilities_Spawn_Pickups;
+	
 	FGameplayTag Abilities_HitReact;
 
 	FGameplayTag Abilities_Status_Locked;
@@ -65,6 +67,7 @@ public:
 
 	FGameplayTag Abilities_Fire_FireBolt;
 	FGameplayTag Abilities_Lightning_Electrocute;
+	FGameplayTag Abilities_Dark_Pact;
 
 	FGameplayTag Abilities_Passive_HaloOfProtection;
 	FGameplayTag Abilities_Passive_LifeSiphon;

@@ -142,6 +142,20 @@ void FBountyGameplayTags::InitializeNativeGameplayTags()
 		FString("Electrocute Ability Tag")
 	);
 
+	GameplayTags.Abilities_Dark_Pact = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Dark.Pact"),
+		FString("Pact Ability Tag")
+	);
+
+	/*
+	 * Spawning Abilities
+	 */
+
+	GameplayTags.Abilities_Spawn_Pickups = UGameplayTagsManager::Get().AddNativeGameplayTag(
+		FName("Abilities.Spawn.Pickup"),
+		FString("Spawn Pickup Ability Tag")
+	);
+	
 	/*
 	 * Passive Spells
 	 */
